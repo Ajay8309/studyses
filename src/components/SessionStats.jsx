@@ -5,7 +5,7 @@ export default function SessionStats() {
   const sessions = useSelector((state) => state.timer.sessions);
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg w-64 mt-2">
+    <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md mt-2">
       <h3 className="text-lg font-semibold mb-2">Session History</h3>
       {sessions.length === 0 ? (
         <p className="text-gray-500">No sessions completed yet</p>

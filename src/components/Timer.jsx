@@ -32,11 +32,11 @@ export default function Timer() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full max-w-md mx-auto p-4">
       {/* Overlay Notification */}
       {showOverlay && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center w-4/5 sm:w-1/2 md:w-1/3 lg:w-1/4">
             <h2 className="text-2xl font-bold mb-2">🎉 Session Completed! 🎉</h2>
             <p className="text-gray-700 mb-4">Great job! Take a break or start another session.</p>
             <button
@@ -50,24 +50,51 @@ export default function Timer() {
       )}
 
       {/* Timer UI */}
-      <div className="flex flex-col items-center bg-gray-900 text-white p-4 rounded-lg shadow-lg">
+      <div className="flex flex-col items-center bg-gray-900 text-white p-6 rounded-lg shadow-lg">
         {/* Time Adjust Buttons */}
-        <div className="flex items-center space-x-4 mb-4">
-          <button onClick={() => handleTimeChange(-5)} className="bg-gray-700 px-4 py-2 rounded-lg">-5 min</button>
-          <div className="text-4xl font-bold bg-gray-800 px-6 py-3 rounded-lg">
+        <div className="flex items-center justify-between w-full max-w-xs mb-4">
+          <button 
+            onClick={() => handleTimeChange(-5)} 
+            className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg text-sm sm:text-base"
+          >
+            -5 min
+          </button>
+
+          <div className="text-4xl sm:text-5xl font-bold bg-gray-800 px-6 py-3 rounded-lg text-center w-36 sm:w-40">
             {String(Math.floor(timeLeft / 60)).padStart(2, "0")}:{String(timeLeft % 60).padStart(2, "0")}
           </div>
-          <button onClick={() => handleTimeChange(5)} className="bg-gray-700 px-4 py-2 rounded-lg">+5 min</button>
+
+          <button 
+            onClick={() => handleTimeChange(5)} 
+            className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg text-sm sm:text-base"
+          >
+            +5 min
+          </button>
         </div>
 
         {/* Control Buttons */}
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap justify-center gap-4 w-full">
           {!isRunning ? (
-            <button onClick={() => dispatch(startTimer())} className="bg-green-500 px-6 py-2 rounded-lg">Start</button>
+            <button 
+              onClick={() => dispatch(startTimer())} 
+              className="bg-green-500 hover:bg-green-600 px-6 py-2 rounded-lg text-sm sm:text-base w-24"
+            >
+              Start
+            </button>
           ) : (
-            <button onClick={() => dispatch(pauseTimer())} className="bg-yellow-500 px-6 py-2 rounded-lg">Pause</button>
+            <button 
+              onClick={() => dispatch(pauseTimer())} 
+              className="bg-yellow-500 hover:bg-yellow-600 px-6 py-2 rounded-lg text-sm sm:text-base w-24"
+            >
+              Pause
+            </button>
           )}
-          <button onClick={() => dispatch(resetTimer())} className="bg-red-500 px-6 py-2 rounded-lg">Reset</button>
+          <button 
+            onClick={() => dispatch(resetTimer())} 
+            className="bg-red-500 hover:bg-red-600 px-6 py-2 rounded-lg text-sm sm:text-base w-24"
+          >
+            Reset
+          </button>
         </div>
       </div>
     </div>

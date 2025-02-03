@@ -39,7 +39,6 @@ function AppContent() {
     return () => clearInterval(interval);
   }, []);
 
-  // Function to toggle fullscreen mode
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch((err) => {
@@ -52,77 +51,53 @@ function AppContent() {
 
   return (
     <div
-      className="min-h-screen transition-all duration-500 relative flex flex-col items-center justify-center"
+      className="min-h-screen transition-all duration-500 flex flex-col items-center justify-center px-4"
       style={{
         backgroundImage: `url(${selectedBg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      {/* Study Timer Title Fixed at the Top */}
-      <h1 className="text-4xl font-bold text-center text-white mt-8 absolute top-4">
+      {/* Study Timer Title */}
+      <h1 className="text-3xl sm:text-4xl font-bold text-center text-white mt-6 absolute top-6">
         Study Timer
       </h1>
 
-      <div className="container mx-auto px-4 py-8 relative flex flex-col items-center">
-        {/* Motivational Quote in the Center */}
-        <div className="bg-black bg-opacity-50 text-white text-xl font-semibold px-6 py-4 rounded-lg shadow-lg text-center">
-          {currentQuote}
-        </div>
+      {/* Quote Box (Responsive) */}
+      <div className="bg-black bg-opacity-50 text-white text-lg sm:text-xl font-semibold px-6 py-4 rounded-lg shadow-lg text-center w-full max-w-lg mt-16 sm:mt-20">
+        {currentQuote}
+      </div>
 
-        {/* Fullscreen Toggle Button */}
-        <div className="fixed top-4 right-4 flex flex-col space-y-4">
-          <button
-            onClick={toggleFullScreen}
-            className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md transition"
-          >
-            Fullscreen
-          </button>
+      {/* Fullscreen Toggle & Background Button */}
+      <div className="fixed top-4 right-4 flex flex-col space-y-3 sm:space-y-4">
+        <button
+          onClick={toggleFullScreen}
+          className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md transition"
+        >
+          Fullscreen
+        </button>
 
-          <button
-            onClick={() => setShowBackgroundSelector(!showBackgroundSelector)}
-            className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md transition"
-          >
-            Background
-          </button>
-          {showBackgroundSelector && (
-            <div className="animate-fade-in">
-              <BackgroundSelector />
-            </div>
-          )}
-        </div>
+        <button
+          onClick={() => setShowBackgroundSelector(!showBackgroundSelector)}
+          className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md transition"
+        >
+          Background
+        </button>
+        {showBackgroundSelector && <BackgroundSelector />}
+      </div>
 
-        {/* Left Sidebar Controls (Timer & Session Stats) */}
-        <div className="fixed top-4 left-4 flex flex-col space-y-4">
-          <button
-            onClick={() => setShowTimer(!showTimer)}
-            className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md transition"
-          >
-            Timer
-          </button>
-          {showTimer && (
-            <div className="animate-fade-in">
-              <Timer />
-            </div>
-          )}
+      {/* Sidebar Buttons (Responsive) */}
+      <div className="fixed top-4 left-4 flex flex-col space-y-3 sm:space-y-4">
+        <button onClick={() => setShowTimer(!showTimer)} className="btn">Timer</button>
+        {showTimer && <Timer />}
 
-          <button
-            onClick={() => setShowSessionStats(!showSessionStats)}
-            className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md transition"
-          >
-            Session Stats
-          </button>
-          {showSessionStats && (
-            <div className="animate-fade-in">
-              <SessionStats />
-            </div>
-          )}
-        </div>
+        <button onClick={() => setShowSessionStats(!showSessionStats)} className="btn">Session Stats</button>
+        {showSessionStats && <SessionStats />}
+      </div>
 
-        {/* Bottom Left: Sound Player */}
-        <div className="fixed bottom-4 left-4">
-          <SoundPlayer />
-        </div>
+      {/* Sound Player (Draggable) */}
+      <div className="fixed bottom-4 left-4">
+        <SoundPlayer />
       </div>
     </div>
   );

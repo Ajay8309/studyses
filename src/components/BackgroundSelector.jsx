@@ -7,9 +7,9 @@ export default function BackgroundSelector() {
   const backgrounds = useSelector(selectBackgrounds);
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg w-64 mt-2">
+    <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-xs sm:max-w-sm mt-2">
       <h3 className="text-lg font-semibold mb-4">Background Theme</h3>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {backgrounds.map((bg) => (
           <button
             key={bg.id}
