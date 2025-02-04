@@ -5,19 +5,27 @@ import BackgroundSelector from "./components/BackgroundSelector";
 import SessionStats from "./components/SessionStats";
 import SoundPlayer from "./components/SoundPlayer";
 import { useSelector } from "react-redux";
-import { selectCurrentBackground, selectBackgrounds } from "./store/backgroundSlice";
+import { selectCurrentBackground, selectBackgrounds, selectVideoUrl, selectVideoMuted, toggleVideoMute, selectVideoVolume, setVideoVolume } from "./store/backgroundSlice";
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useRef } from "react";
 
 function AppContent() {
+  const dispatch = useDispatch();
   const currentBackground = useSelector(selectCurrentBackground);
   const backgrounds = useSelector(selectBackgrounds);
+  const videoUrl = useSelector(selectVideoUrl);
+  const videoMuted = useSelector(selectVideoMuted);
+  const videoVolume = useSelector(selectVideoVolume);
+  
   const [showTimer, setShowTimer] = useState(false);
   const [showSessionStats, setShowSessionStats] = useState(false);
   const [showBackgroundSelector, setShowBackgroundSelector] = useState(false);
 
   const selectedBg = backgrounds.find((bg) => bg.id === currentBackground)?.image || "";
+  const videoRef = useRef(null);
 
-  // Motivational Quotes
+
   const quotes = [
     "Believe in yourself and all that you are.",
     "Success is not final, failure is not fatal: it is the courage to continue that counts.",
@@ -39,7 +47,15 @@ function AppContent() {
     return () => clearInterval(interval);
   }, []);
 
-  // Function to toggle fullscreen mode
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.contentWindow.postMessage(
+        `{"event":"command","func":"setVolume","args":[${videoMuted ? "0" : videoVolume}]}`,
+        "*"
+      );
+    }
+  }, [videoMuted, videoVolume]);
+
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch((err) => {
@@ -50,27 +66,39 @@ function AppContent() {
     }
   };
 
+  const getEmbeddedVideoUrl = (url) => {
+    const videoId = url.split("v=")[1]?.split("&")[0];
+    return videoId
+      ? `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&mute=${videoMuted ? "1" : "0"}&enablejsapi=1`
+      : "";
+  };
   return (
-    <div
-      className="min-h-screen transition-all duration-500 relative flex flex-col items-center justify-center"
-      style={{
-        backgroundImage: `url(${selectedBg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      {/* Study Timer Title Fixed at the Top */}
-      <h1 className="text-4xl font-bold text-center text-white mt-8 absolute top-4">
-        Study Timer
-      </h1>
+    <div className="relative min-h-screen flex flex-col items-center justify-center px-4">
+      {videoUrl ? (
+        <iframe
+          ref={videoRef}
+          className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none z-0"
+          src={getEmbeddedVideoUrl(videoUrl)}
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        />
+      ) : (
+        <div
+          className="absolute top-0 left-0 w-full h-full bg-cover bg-center z-0"
+          style={{ backgroundImage: `url(${selectedBg})` }}
+        />
+      )}
 
-      <div className="container mx-auto px-4 py-8 relative flex flex-col items-center">
-        {/* Motivational Quote in the Center */}
-        <div className="bg-black bg-opacity-50 text-white text-xl font-semibold px-6 py-4 rounded-lg shadow-lg text-center">
+      <div className="relative z-10 w-full max-w-4xl">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center text-white mt-6">
+          Study Timer
+        </h1>
+
+        <div className="bg-black bg-opacity-50 text-white text-lg sm:text-xl font-semibold px-6 py-4 rounded-lg shadow-lg text-center mt-6">
           {currentQuote}
         </div>
 
-        {/* Fullscreen Toggle Button */}
         <div className="fixed top-4 right-4 flex flex-col space-y-4">
           <button
             onClick={toggleFullScreen}
@@ -85,14 +113,34 @@ function AppContent() {
           >
             Background
           </button>
-          {showBackgroundSelector && (
-            <div className="animate-fade-in">
-              <BackgroundSelector />
-            </div>
+          {showBackgroundSelector && <BackgroundSelector />}
+
+          {videoUrl && (
+            <>
+              <button
+                onClick={() => dispatch(toggleVideoMute())}
+                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md transition"
+              >
+                {videoMuted ? "Unmute Video" : "Mute Video"}
+              </button>
+
+              {!videoMuted && (
+                <div className="flex flex-col items-center mt-2">
+                  <label className="text-sm font-medium">Volume: {videoVolume}%</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={videoVolume}
+                    onChange={(e) => dispatch(setVideoVolume(Number(e.target.value)))}
+                    className="w-full"
+                  />
+                </div>
+              )}
+            </>
           )}
         </div>
 
-        {/* Left Sidebar Controls (Timer & Session Stats) */}
         <div className="fixed top-4 left-4 flex flex-col space-y-4">
           <button
             onClick={() => setShowTimer(!showTimer)}
@@ -100,11 +148,7 @@ function AppContent() {
           >
             Timer
           </button>
-          {showTimer && (
-            <div className="animate-fade-in">
-              <Timer />
-            </div>
-          )}
+          {showTimer && <Timer />}
 
           <button
             onClick={() => setShowSessionStats(!showSessionStats)}
@@ -112,14 +156,9 @@ function AppContent() {
           >
             Session Stats
           </button>
-          {showSessionStats && (
-            <div className="animate-fade-in">
-              <SessionStats />
-            </div>
-          )}
+          {showSessionStats && <SessionStats />}
         </div>
 
-        {/* Bottom Left: Sound Player */}
         <div className="fixed bottom-4 left-4">
           <SoundPlayer />
         </div>
@@ -127,6 +166,7 @@ function AppContent() {
     </div>
   );
 }
+
 
 export default function App() {
   return (
