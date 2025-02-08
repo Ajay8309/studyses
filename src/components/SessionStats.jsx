@@ -1,8 +1,7 @@
-import { useSelector } from "react-redux";
 import { formatDistanceToNow } from "date-fns";
 
-export default function SessionStats() {
-  const sessions = useSelector((state) => state.timer.sessions);
+export default function SessionStats({ sessions }) {
+  console.log("Rendering sessions:", sessions); // Debugging
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-lg w-64 mt-2">
@@ -15,7 +14,7 @@ export default function SessionStats() {
             <div key={index} className="bg-gray-100 p-2 rounded shadow">
               <p className="text-sm">
                 {Math.floor(session.duration / 60)} min session completed{" "}
-                {formatDistanceToNow(new Date(session.completedAt))} ago
+                {session.completedAt ? formatDistanceToNow(new Date(session.completedAt)) : "unknown time"} ago
               </p>
             </div>
           ))}

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  duration: 25 * 60, // Default: 25 minutes
+  duration: 25 * 60,
   timeLeft: 25 * 60,
   isRunning: false,
   sessions: [],
@@ -14,7 +14,7 @@ export const timerSlice = createSlice({
     setDuration: (state, action) => {
       if (!state.isRunning) {
         state.duration = action.payload;
-        state.timeLeft = action.payload; // Update timeLeft to match the new duration
+        state.timeLeft = action.payload; 
       }
     },
     startTimer: (state) => {

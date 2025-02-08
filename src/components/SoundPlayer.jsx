@@ -7,7 +7,6 @@ function SoundPlayer() {
   const dispatch = useDispatch();
   const sounds = useSelector(selectSounds);
 
-  // Store audio elements in a ref
   const audioRefs = useRef({});
 
   useEffect(() => {

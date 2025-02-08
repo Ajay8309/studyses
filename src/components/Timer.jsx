@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setDuration, startTimer, pauseTimer, resetTimer, tick, completeSession } from "../store/timerSlice";
-import completionSound from "../assets/completionSound.mp3"; // Add a notification sound
+import { db } from "../firebase"; // Ensure Firebase is properly imported
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import useAuth from "./useAuth"; 
+import completionSound from "../assets/completionSound.mp3";
 
 export default function Timer() {
   const dispatch = useDispatch();
   const { timeLeft, isRunning, duration } = useSelector((state) => state.timer);
   const [customMinutes, setCustomMinutes] = useState(duration / 60);
   const [showOverlay, setShowOverlay] = useState(false);
-  const audio = new Audio(completionSound); // Load the sound
+  const user = useAuth(); // Get authenticated user
+  const audio = new Audio(completionSound);
 
   useEffect(() => {
     let interval;
@@ -17,13 +21,51 @@ export default function Timer() {
         dispatch(tick());
       }, 1000);
     } else if (timeLeft === 0) {
-      audio.play(); // Play sound on completion
+      audio.play();
       dispatch(completeSession());
-      setShowOverlay(true); // Show overlay
-      setTimeout(() => setShowOverlay(false), 5000); // Hide overlay after 5s
+      saveSessionToFirestore();
+      setShowOverlay(true);
+      setTimeout(() => setShowOverlay(false), 5000);
     }
+
     return () => clearInterval(interval);
   }, [isRunning, timeLeft, dispatch]);
+
+  const saveSessionToFirestore = async () => {
+    if (!user || !user.uid) {
+      console.error("User is not authenticated.");
+      return;
+    }
+  
+    const userRef = doc(db, "sessions", user.uid);
+  
+    try {
+      // Ensure document exists
+      const docSnap = await getDoc(userRef);
+      if (!docSnap.exists()) {
+        await setDoc(userRef, { history: [] }, { merge: true });
+      }
+  
+      // Ensure history is an array
+      const userData = docSnap.data();
+      if (!userData || !Array.isArray(userData.history)) {
+        await updateDoc(userRef, { history: [] });
+      }
+  
+      // Update history array safely
+      await updateDoc(userRef, {
+        history: arrayUnion({
+          duration,
+          completedAt: new Date().toISOString(),
+        }),
+      });
+  
+      console.log("Session saved successfully!");
+    } catch (error) {
+      console.error("Error saving session:", error);
+    }
+  };
+  
 
   const handleTimeChange = (amount) => {
     const newMinutes = Math.max(1, customMinutes + amount);
