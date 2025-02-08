@@ -1,4 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
+import React from "react";
 
 export default function SessionStats({ sessions }) {
   console.log("Rendering sessions:", sessions); // Debugging

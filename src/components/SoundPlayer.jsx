@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectSounds, togglePlay, setVolume } from "../store/soundSlice";
 import { useEffect, useRef } from "react";
 import Draggable from "react-draggable";
+import React from "react";
 
 function SoundPlayer() {
   const dispatch = useDispatch();

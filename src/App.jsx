@@ -9,6 +9,7 @@ import { auth, db } from "./firebase";
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { doc, setDoc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { useState, useEffect, useRef, useCallback } from "react";
+import React from "react";
 
 import { 
   selectCurrentBackground, 
@@ -21,7 +22,7 @@ import {
 } from "./store/backgroundSlice";
 
 function AppContent() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const currentBackground = useSelector(selectCurrentBackground);
   const backgrounds = useSelector(selectBackgrounds);
   const videoUrl = useSelector(selectVideoUrl);

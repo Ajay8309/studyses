@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setDuration, startTimer, pauseTimer, resetTimer, tick, completeSession } from "../store/timerSlice";
-import { db } from "../firebase"; // Ensure Firebase is properly imported
+import { db } from "../firebase"; 
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import useAuth from "./useAuth"; 
 import completionSound from "../assets/completionSound.mp3";
+import React from "react";
+
 
 export default function Timer() {
   const dispatch = useDispatch();
   const { timeLeft, isRunning, duration } = useSelector((state) => state.timer);
   const [customMinutes, setCustomMinutes] = useState(duration / 60);
   const [showOverlay, setShowOverlay] = useState(false);
-  const user = useAuth(); // Get authenticated user
+  const user = useAuth(); 
   const audio = new Audio(completionSound);
 
   useEffect(() => {
@@ -40,19 +42,16 @@ export default function Timer() {
     const userRef = doc(db, "sessions", user.uid);
   
     try {
-      // Ensure document exists
       const docSnap = await getDoc(userRef);
       if (!docSnap.exists()) {
         await setDoc(userRef, { history: [] }, { merge: true });
       }
   
-      // Ensure history is an array
       const userData = docSnap.data();
       if (!userData || !Array.isArray(userData.history)) {
         await updateDoc(userRef, { history: [] });
       }
   
-      // Update history array safely
       await updateDoc(userRef, {
         history: arrayUnion({
           duration,
@@ -75,7 +74,6 @@ export default function Timer() {
 
   return (
     <div className="relative">
-      {/* Overlay Notification */}
       {showOverlay && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
@@ -91,9 +89,7 @@ export default function Timer() {
         </div>
       )}
 
-      {/* Timer UI */}
       <div className="flex flex-col items-center bg-gray-900 text-white p-4 rounded-lg shadow-lg">
-        {/* Time Adjust Buttons */}
         <div className="flex items-center space-x-4 mb-4">
           <button onClick={() => handleTimeChange(-5)} className="bg-gray-700 px-4 py-2 rounded-lg">-5 min</button>
           <div className="text-4xl font-bold bg-gray-800 px-6 py-3 rounded-lg">
@@ -102,7 +98,6 @@ export default function Timer() {
           <button onClick={() => handleTimeChange(5)} className="bg-gray-700 px-4 py-2 rounded-lg">+5 min</button>
         </div>
 
-        {/* Control Buttons */}
         <div className="flex space-x-4">
           {!isRunning ? (
             <button onClick={() => dispatch(startTimer())} className="bg-green-500 px-6 py-2 rounded-lg">Start</button>

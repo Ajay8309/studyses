@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setBackground, setVideoUrl, toggleVideoMute, setVideoVolume, selectCurrentBackground, selectBackgrounds, selectVideoUrl, selectVideoMuted, selectVideoVolume } from "../store/backgroundSlice";
 import { useState } from "react";
+import React from "react";
+
 
 export default function BackgroundSelector() {
   const dispatch = useDispatch();
