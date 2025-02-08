@@ -3,14 +3,15 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDEJpOQZYBX2dje09fu6NPL5E_gCbgZOG8",
-    authDomain: "new-solo-4c49e.firebaseapp.com",
-    projectId: "new-solo-4c49e",
-    storageBucket: "new-solo-4c49e.firebasestorage.app",
-    messagingSenderId: "575059377222",
-    appId: "1:575059377222:web:f3730fce23efbef247de47",
-    measurementId: "G-3F963C5DVK"
-  };
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+};
+
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
