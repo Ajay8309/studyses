@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
-import axios from "axios";
+// import axios from "axios";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -42,21 +42,21 @@ const logout = async () => {
 };
 
 const fetchAITodo = async () => {
-  try {
-    console.log("Fetching AI To-Do...");
-    const response = await axios.get("https://api.sree.shop/v1", {
-      headers: { Authorization: `Bearer ${import.meta.env.VITE_SREE_API_KEY}` }
-    });
-    console.log("AI To-Do Response:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching AI To-Do:", error.message);
-    if (error.response) {
-      console.error("Response Data:", error.response.data);
-      console.error("Response Status:", error.response.status);
-    }
-    return [];
-  }
+  // try {
+  //   console.log("Fetching AI To-Do...");
+  //   const response = await axios.get("https://api.sree.shop/v1", {
+  //     headers: { Authorization: `Bearer ${import.meta.env.VITE_SREE_API_KEY}` }
+  //   });
+  //   console.log("AI To-Do Response:", response.data);
+  //   return response.data;
+  // } catch (error) {
+  //   console.error("Error fetching AI To-Do:", error.message);
+  //   if (error.response) {
+  //     console.error("Response Data:", error.response.data);
+  //     console.error("Response Status:", error.response.status);
+  //   }
+  //   return [];
+  // }
 };
 
 
