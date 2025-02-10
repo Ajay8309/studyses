@@ -10,6 +10,7 @@ import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { doc, setDoc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { useState, useEffect, useRef, useCallback } from "react";
 import React from "react";
+import TodoList from "./components/TodoList";
 
 import { 
   selectCurrentBackground, 
@@ -163,6 +164,8 @@ function AppContent() {
               <button onClick={() => setShowBackgroundSelector(!showBackgroundSelector)} className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
                 Background
               </button>
+
+              <TodoList/>
               {showBackgroundSelector && <BackgroundSelector />}
 
               {videoUrl && (
