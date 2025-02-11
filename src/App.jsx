@@ -125,18 +125,24 @@ function AppContent() {
       document.exitFullscreen();
     }
   };
+  
+  const extractVideoId = (url) => {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|.*\/|.*embed\/|.*shorts\/))([^?&]+)/);
+  return match ? match[1] : "";
+};
+
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center px-4">
       {videoUrl ? (
-        <iframe
-          ref={videoRef}
-          className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none z-0"
-          src={videoUrl}
-          frameBorder="0"
-          allow="autoplay; encrypted-media"
-          allowFullScreen
-        />
+       <iframe
+       ref={videoRef}
+       className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none z-0"
+       src={`https://www.youtube.com/embed/${extractVideoId(videoUrl)}?autoplay=1&mute=${videoMuted ? 1 : 0}&controls=0&loop=1&playlist=${extractVideoId(videoUrl)}`}
+       frameBorder="0"
+       allow="autoplay; encrypted-media"
+       allowFullScreen
+     />
       ) : (
         <div className="absolute top-0 left-0 w-full h-full bg-cover bg-center z-0" style={{ backgroundImage: `url(${selectedBg})` }} />
       )}
